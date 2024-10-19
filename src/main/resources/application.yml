@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: axon-project
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/bank?createDatabaseIfNotExist=true
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+        hibernate:
+            dialect: org.hibernate.dialect.MariaDBDialect
+server:
+  port: 8080
+miner:
+  name: Miner.com
