@@ -4,6 +4,8 @@ import com.axon_springboot.axon_springboot.commonapi.events.AccountActivatedEven
 import com.axon_springboot.axon_springboot.commonapi.events.AccountCreatedEvent;
 import com.axon_springboot.axon_springboot.commonapi.events.AccountCreditedEvent;
 import com.axon_springboot.axon_springboot.commonapi.events.AccountDebitedEvent;
+import com.axon_springboot.axon_springboot.commonapi.queries.GetAccountQuery;
+import com.axon_springboot.axon_springboot.commonapi.queries.GetAllAccountsQuery;
 import com.axon_springboot.axon_springboot.query.entities.Account;
 import com.axon_springboot.axon_springboot.query.entities.Operation;
 import com.axon_springboot.axon_springboot.query.repository.AccountRepository;
@@ -11,11 +13,14 @@ import com.axon_springboot.axon_springboot.query.repository.OperationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 
 @Transactional
@@ -67,7 +72,7 @@ public class AccountServiceHandler {
 
        Operation operation = Operation.builder()
                 .account(savedAccount)
-                .status(OperationStatus.CREDIT)
+                .status(OperationStatus.DEBIT)
                 .createdAt(new Date())
                 .build();
        operationRepository.save(operation);
@@ -90,6 +95,16 @@ public class AccountServiceHandler {
                 .createdAt(new Date())
                 .build();
         operationRepository.save(operation);
+    }
+
+    @QueryHandler
+    public List<Account> on(GetAllAccountsQuery query) {
+    return accountRepository.findAll();
+    }
+
+    @QueryHandler
+    public Account on(GetAccountQuery query) {
+        return accountRepository.findById(query.getId()).orElseThrow(() -> new IllegalArgumentException("Account not found"));
     }
 }
 

@@ -19,6 +19,6 @@ public class Account {
     private String currency;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account")
     private Collection<Operation> operations;
 }
